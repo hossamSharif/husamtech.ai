@@ -1,0 +1,20 @@
+---
+// Root URL: send visitors to their language. On Vercel this is handled earlier
+// by the redirects in vercel.json; this page is the fallback for other hosts.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>HusamTech</title>
+    <meta name="robots" content="noindex" />
+    <script is:inline>
+      location.replace(/^ar\b/i.test(navigator.language || '') ? '/ar/' : '/en/');
+    </script>
+    <noscript><meta http-equiv="refresh" content="0;url=/en/" /></noscript>
+  </head>
+  <body>
+    <a href="/en/">English</a> · <a href="/ar/" lang="ar">العربية</a>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import Stats from '../../components/Stats.astro';
+import Icon from '../../components/Icon.astro';
+import CTA from '../../components/CTA.astro';
+import { t, lp, langPaths, type Lang } from '../../i18n/utils';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const all = t(lang);
+const d = all.about;
+const services = [
+  { icon: 'cloud', label: all.nav.saas, href: lp(lang, '/saas') },
+  { icon: 'phone', label: all.nav.mobile, href: lp(lang, '/mobile-apps') },
+];
+---
+
+<Base lang={lang} title={d.title} description={d.hero.desc}>
+  <PageHero {...d.hero}>
+    <div class="grid gap-4">
+      {
+        services.map((s, i) => (
+          <a href={s.href} class:list={['card flex items-center gap-4 p-5', i === 0 ? 'float' : 'float-slow sm:ms-10']}>
+            <span class="icon-chip"><Icon name={s.icon} size={22} /></span>
+            <span class="text-lg font-semibold">{s.label}</span>
+            <Icon name="arrow" size={18} class="ms-auto text-accent rtl:-scale-x-100" />
+          </a>
+        ))
+      }
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="container-x grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
+      <SectionHeading title={d.storyTitle} />
+      <div class="space-y-5 text-lg text-muted">
+        {d.story.map((p, i) => <p class="reveal" style={`--d:${i * 100}ms`}>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-soft">
+    <div class="container-x">
+      <SectionHeading title={d.statsTitle} />
+      <div class="mt-10"><Stats items={d.stats} /></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container-x">
+      <SectionHeading title={d.valuesTitle} />
+      <div class="mt-12"><FeatureGrid items={all.values} cols={4} /></div>
+    </div>
+  </section>
+
+  <CTA lang={lang} />
+</Base>

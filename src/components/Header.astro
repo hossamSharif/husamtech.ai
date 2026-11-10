@@ -1,0 +1,85 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import { t, lp, stripLang, otherLang, type Lang } from '../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const current = stripLang(Astro.url.pathname);
+const links = [
+  { href: '/', label: d.nav.home },
+  { href: '/saas', label: d.nav.saas },
+  { href: '/mobile-apps', label: d.nav.mobile },
+  { href: '/about', label: d.nav.about },
+];
+const switchHref = lp(otherLang(lang), current);
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-line bg-bg/80 backdrop-blur-md supports-[not(backdrop-filter:blur(1px))]:bg-bg"
+>
+  <div class="container-x flex h-16 items-center justify-between gap-3">
+    <Logo name={d.meta.siteName} href={lp(lang)} />
+
+    <nav class="hidden lg:flex items-center gap-8" aria-label={d.nav.menu}>
+      {
+        links.map((l) => (
+          <a href={lp(lang, l.href)} class="nav-link" aria-current={current === l.href ? 'page' : undefined}>
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        href={switchHref}
+        class="icon-btn"
+        hreflang={otherLang(lang)}
+        lang={otherLang(lang)}
+        aria-label={d.nav.langLabel}
+        data-astro-reload
+      >
+        <span class="hidden items-center gap-1.5 min-[480px]:flex"><Icon name="globe" size={16} />{d.nav.lang}</span>
+        <span class="min-[480px]:hidden" aria-hidden="true">{otherLang(lang).toUpperCase()}</span>
+      </a>
+      <button type="button" class="icon-btn" data-theme-toggle aria-label={d.nav.theme} title={d.nav.theme}>
+        <Icon name="moon" size={18} class="theme-moon" />
+        <Icon name="sun" size={18} class="theme-sun" />
+      </button>
+      <a href={`mailto:${d.contact.email}`} class="btn btn-primary hidden sm:inline-flex">{d.nav.cta}</a>
+      <button
+        type="button"
+        class="icon-btn lg:hidden"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label={d.nav.menu}
+      >
+        <Icon name="menu" class="menu-open" />
+        <Icon name="x" class="menu-close" />
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" data-menu class="lg:hidden border-t border-line bg-bg">
+    <nav class="container-x flex flex-col py-3" aria-label={d.nav.menu}>
+      {
+        links.map((l) => (
+          <a
+            href={lp(lang, l.href)}
+            class:list={[
+              'flex min-h-12 items-center rounded-xl px-3 font-medium',
+              current === l.href ? 'bg-tint text-accent' : 'text-fg',
+            ]}
+            aria-current={current === l.href ? 'page' : undefined}
+          >
+            {l.label}
+          </a>
+        ))
+      }
+      <a href={`mailto:${d.contact.email}`} class="btn btn-primary mt-3 sm:hidden">{d.nav.cta}</a>
+    </nav>
+  </div>
+</header>

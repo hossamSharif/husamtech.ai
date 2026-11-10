@@ -1,0 +1,45 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import { t, lp, type Lang } from '../i18n/utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const year = new Date().getFullYear();
+const link = 'inline-flex min-h-9 items-center text-muted transition-colors hover:text-accent';
+---
+
+<footer class="border-t border-line bg-soft">
+  <div class="container-x grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.2fr]">
+    <div>
+      <Logo name={d.meta.siteName} href={lp(lang)} />
+      <p class="mt-4 max-w-xs text-muted">{d.footer.blurb}</p>
+    </div>
+    <div>
+      <h2 class="mb-3 text-sm font-semibold text-fg">{d.footer.services}</h2>
+      <ul>
+        <li><a class={link} href={lp(lang, '/saas')}>{d.nav.saas}</a></li>
+        <li><a class={link} href={lp(lang, '/mobile-apps')}>{d.nav.mobile}</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="mb-3 text-sm font-semibold text-fg">{d.footer.company}</h2>
+      <ul>
+        <li><a class={link} href={lp(lang)}>{d.nav.home}</a></li>
+        <li><a class={link} href={lp(lang, '/about')}>{d.nav.about}</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="mb-3 text-sm font-semibold text-fg">{d.footer.contact}</h2>
+      <a class={`${link} gap-2 break-all`} href={`mailto:${d.contact.email}`}>
+        <Icon name="mail" size={18} class="flex-none" /><span dir="ltr">{d.contact.email}</span>
+      </a>
+    </div>
+  </div>
+  <div class="border-t border-line">
+    <p class="container-x py-5 text-sm text-muted">
+      {`© ${year} ${d.meta.siteName}. ${d.footer.rights}`}
+    </p>
+  </div>
+</footer>
